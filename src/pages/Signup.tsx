@@ -4,13 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 const Signup: React.FC = () => {
   const navigate = useNavigate();
 
-  // State for form values
+  // State for holding form values
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // State for form errors
+  // State for form validation errors
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
@@ -18,10 +18,13 @@ const Signup: React.FC = () => {
     password: "",
   });
 
-  // State for loading/error messages
+  // State for loading/error messages after form submission
   const [message, setMessage] = useState<string | null>(null);
 
   // Basic validation for fields
+  /** This function ensures all fields are filled and validates email format.
+   * @returns {boolean} - Returns true if form is valid, false otherwise.
+   */
   const validate = (): boolean => {
     const newErrors = {
       firstName: "",
@@ -52,33 +55,38 @@ const Signup: React.FC = () => {
     return isValid;
   };
 
-  // Handle form submission
+   /**
+   * Handles the form submission
+   * This function triggers the form validation and sends the sign-up request.
+   * @param e - The form submission event
+   */
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent page refresh
+    e.preventDefault(); // Prevent page refresh/reload
 
-    // Validate form
-    if (!validate()) return;
+    // Validate form fields before sending the API request
+    if (!validate()) return; // If validation fails, exit early
 
     const user = { firstName, lastName, email, password };
 
     // API request to sign up
     fetch("https://", {
-      method: "POST",
+      method: "POST", //send data to the server
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", // set request
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(user), // Send the user data as JSON
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Sign up failed");
         }
-        return response.json();
+        return response.json(); // Parse the JSON response if success
       })
       .then(() => {
+
         setMessage("Your account has been created! Redirecting to login...");
         setTimeout(() => {
-          navigate("/auth/login");
+          navigate("/auth/login"); // Navigate to the login page after a delay
         }, 2000);
       })
       .catch((error) => {
@@ -95,6 +103,8 @@ const Signup: React.FC = () => {
             Sign Up
           </h1>
         </div>
+
+         {/* Form to capture user details */}
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           {/* First Name */}
           <div className="form-section">
@@ -158,7 +168,7 @@ const Signup: React.FC = () => {
           </div>
         </form>
 
-        {/* Message */}
+        {/* Show success or error message */}
         {message && (
           <div className="mt-4 text-center">
             <p className={message === "Your account has been created!" ? "text-green-500" : "text-red-500"}>
