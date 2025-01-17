@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const Signup: React.FC = () => {
     return isValid;
   };
 
-   /**
+  /**
    * Handles the form submission
    * This function triggers the form validation and sends the sign-up request.
    * @param e - The form submission event
@@ -69,10 +69,10 @@ const Signup: React.FC = () => {
     const user = { firstName, lastName, email, password };
 
     // API request to sign up
-    fetch("https://", {
-      method: "POST", //send data to the server
+    fetch("https://fakeapi.platzi.com/en/rest/auth-jwt/signup", {
+      method: "POST", // Send data to the server
       headers: {
-        "Content-Type": "application/json", // set request
+        "Content-Type": "application/json", // Set request type as JSON
       },
       body: JSON.stringify(user), // Send the user data as JSON
     })
@@ -83,7 +83,6 @@ const Signup: React.FC = () => {
         return response.json(); // Parse the JSON response if success
       })
       .then(() => {
-
         setMessage("Your account has been created! Redirecting to login...");
         setTimeout(() => {
           navigate("/auth/login"); // Navigate to the login page after a delay
@@ -95,88 +94,86 @@ const Signup: React.FC = () => {
       });
   };
 
+
   return (
-    <div className="wrapper">
-      <div className="p-8 mt-16 w-full bg-lightColor-100 border-4 border-lightColor-300 rounded-lg">
-        <div className="text-center mb-4">
-          <h1 className="text-purpleshade-400 font-extrabold text-4xl mb-3">
-            Sign Up
-          </h1>
+    <div className="container mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-6">Sign Up</h1>
+
+      {/* Form to capture user details */}
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+        {/* First Name */}
+        <div className="mb-4">
+          <label htmlFor="firstName" className="block">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)} // Update first name
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+          {errors.firstName && <span className="text-red-500">{errors.firstName}</span>}
         </div>
 
-         {/* Form to capture user details */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
-          {/* First Name */}
-          <div className="form-section">
-            <label htmlFor="firstName">First Name</label>
-            <input
-              id="firstName"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="input"
-            />
-            {errors.firstName && <span className="text-red-500">{errors.firstName}</span>}
-          </div>
+        {/* Last Name */}
+        <div className="mb-4">
+          <label htmlFor="lastName" className="block">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)} // Update last name
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+          {errors.lastName && <span className="text-red-500">{errors.lastName}</span>}
+        </div>
 
-          {/* Last Name */}
-          <div className="form-section">
-            <label htmlFor="lastName">Last Name</label>
-            <input
-              id="lastName"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="input"
-            />
-            {errors.lastName && <span className="text-red-500">{errors.lastName}</span>}
-          </div>
+        {/* Email */}
+        <div className="mb-4">
+          <label htmlFor="email" className="block">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} // Update email state
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+          {errors.email && <span className="text-red-500">{errors.email}</span>}
+        </div>
 
-          {/* Email */}
-          <div className="form-section">
-            <label htmlFor="email">Email Address</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input"
-            />
-            {errors.email && <span className="text-red-500">{errors.email}</span>}
-          </div>
+        {/* Password */}
+        <div className="mb-4">
+          <label htmlFor="password" className="block">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)} // Update password state
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+          {errors.password && <span className="text-red-500">{errors.password}</span>}
+        </div>
 
-          {/* Password */}
-          <div className="form-section">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input"
-            />
-            {errors.password && <span className="text-red-500">{errors.password}</span>}
-          </div>
+        {/* Submit button */}
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">Sign Up</button>
+        
+        {/* Link to Login */}
+        <p className="mt-4 text-center">
+          Already have an account? <a href="/auth/login" className="text-blue-600">Login</a>
+        </p>
+      </form>
 
-          {/* Submit button */}
-          <div className="form-section">
-            <button type="submit" className="btn">Sign Up</button>
-            <p className="mt-4">
-              Already have an account?{" "}
-              <Link to="/auth/login" className="text-blue-600">Login</Link>
-            </p>
-          </div>
-        </form>
-
-        {/* Show success or error message */}
-        {message && (
-          <div className="mt-4 text-center">
-            <p className={message === "Your account has been created!" ? "text-green-500" : "text-red-500"}>
-              {message}
-            </p>
-          </div>
-        )}
-      </div>
+      {/* Display message */}
+      {message && (
+        <div className="mt-4 text-center">
+          <p className={message === "Your account has been created!" ? "text-green-500" : "text-red-500"}>
+            {message}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
