@@ -224,35 +224,100 @@
 
 
 import React, { useState, useEffect } from 'react';
-import EmptyCart from './EmptyCart';  // Import EmptyCart
-import CartSummary from './CartSummary';  // Import CartSummary
+import EmptyCart from '../pages/EmptyCart';  
+import CartSummary from '../pages/CartSummary';  
+import { fetchProducts } from '../services/api';  
+
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+}
 
 const CheckoutPage: React.FC = () => {
   const [cartState, setCartState] = useState({
-    addedProducts: [
-      { name: 'Product 1', price: 29.99 },
-      { name: 'Product 2', price: 49.99 },
-    ], // Example cart items
+    addedProducts: [] as Product[], // Empty initially
     checkout: false,
   });
 
   const [error, setError] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
 
+  // Fetch product data from Fake API
   useEffect(() => {
-    // This effect could be used to fetch cart data from local storage, API, etc.
-  }, []);
+    const getProducts = async () => {
+      try {
+        const data = await fetchProducts();  // Fetch products using the fetchProducts function from api.ts
+        setProducts(data); // Set products data
+      } catch (error) {
+        setError('Failed to load products. Please try again later.');
+      }
+    };
+
+    getProducts(); // Call fetch function on mount
+  }, []); // Empty dependency array ensures it runs once on mount
+
+  // Function to add a product to the cart
+  const addProductToCart = (product: Product) => {
+    setCartState(prevState => ({
+      ...prevState,
+      addedProducts: [...prevState.addedProducts, product]
+    }));
+  };
+
+  // Function to remove a product from the cart
+  const removeProductFromCart = (productName: string) => {
+    setCartState(prevState => ({
+      ...prevState,
+      addedProducts: prevState.addedProducts.filter(product => product.name !== productName)
+    }));
+  };
+
+  // Function to complete the checkout
+  const completeCheckout = () => {
+    setCartState(prevState => ({
+      ...prevState,
+      checkout: true
+    }));
+  };
 
   return (
-    <>
-      {error && <div className="error-message">{error}</div>} {/* Display error message */}
-      
+    <div className="checkout-page">
+      {/* Error message if any */}
+      {error && <div className="error-message">{error}</div>}
+
       {/* Check if the checkout is complete or cart is empty */}
       {cartState.checkout || !cartState.addedProducts.length ? (
         <EmptyCart /> // Display empty cart message if no products are added or checkout is complete
       ) : (
-        <CartSummary cartItems={cartState.addedProducts} /> // Display cart summary if products are added
+        <CartSummary
+          cartItems={cartState.addedProducts}
+          onRemoveProduct={removeProductFromCart}
+          onCompleteCheckout={completeCheckout}
+        /> // Display cart summary if products are added
       )}
-    </>
+
+      {/* Product List from API */}
+      <div className="product-list">
+        <h2>Available Products</h2>
+        {products.length > 0 ? (
+          products.map(product => (
+            <div key={product.id}>
+              <h3>{product.name} - ${product.price.toFixed(2)}</h3>
+              <button onClick={() => addProductToCart(product)}>Add to Cart</button>
+            </div>
+          ))
+        ) : (
+          <p>No products available at the moment.</p>
+        )}
+      </div>
+
+      {/* Example Buttons to simulate adding/removing products */}
+      <div className="product-actions">
+        <button onClick={completeCheckout}>Complete Checkout</button>
+      </div>
+    </div>
   );
 };
 

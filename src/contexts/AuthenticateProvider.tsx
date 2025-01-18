@@ -173,27 +173,37 @@
 // };
 
 
-import React, { createContext, useContext, useState } from 'react';
 
-// Create the AuthContext
-const AuthContext = createContext<any>(null);
 
-// Create a provider component
-const AuthenticateProvider: React.FC = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+import React, { useState, ReactNode } from 'react';
+import { AuthContext, AuthContextType } from '../contexts/AuthContext';  // Import the context
 
-  // Function to handle login or authentication logic
-  const login = () => {
-    setIsAuthenticated(true);
+// Provider component that wraps the app and provides authentication state
+export const AuthenticateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const login = (email: string, password: string) => {
+    if (email && password) {
+      setIsAuthenticated(true);
+    }
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+  };
+
+  // Define the authContextValue using AuthContextType
+  const authContextValue: AuthContextType = {
+    isAuthenticated,
+    login,
+    logout,
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <AuthContext.Provider value={authContextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export default AuthenticateProvider;
-//const useAuth = () => useContext(AuthContext); // Custom hook to use the auth context
-export { AuthContext };
+//export default AuthenticateProvider;

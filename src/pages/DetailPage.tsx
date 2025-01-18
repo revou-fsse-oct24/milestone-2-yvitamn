@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchProductDetails } from '../services/api';
+import { fetchProductDetails } from '../services/api'; // Assuming you have this function
 
 interface Product {
   id: string;
@@ -42,15 +42,15 @@ const DetailPage: React.FC = () => {
   }, [id]); // Effect depends on the product ID
 
   if (loading) {
-    return <div className="text-center text-lg">Loading product details...</div>; // Show loading text
+    return <div className="text-center text-lg">Loading product details...</div>;
   }
 
   if (error) {
-    return <div className="text-center text-lg text-red-500">{error}</div>; // Show error if any occurs
+    return <div className="text-center text-lg text-red-500">{error}</div>;
   }
 
   if (!product) {
-    return <div className="text-center text-lg">Product not found</div>; // Handle case if product is null
+    return <div className="text-center text-lg">Product not found</div>;
   }
 
   return (
