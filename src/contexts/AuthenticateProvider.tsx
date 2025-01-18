@@ -185,6 +185,7 @@ export const AuthenticateProvider: React.FC<{ children: ReactNode }> = ({ childr
   const login = (email: string, password: string) => {
     if (email && password) {
       setIsAuthenticated(true);
+      console.log('User authenticated:', true);  
     }
   };
 

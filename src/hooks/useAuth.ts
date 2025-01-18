@@ -1,7 +1,6 @@
-// src/hooks/useAuth.ts
 
 import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthenticateProvider'; 
+import { AuthContext } from '../contexts/AuthContext';  // Import the context
 
 // Custom hook to use authentication context
 export const useAuth = () => {
@@ -12,4 +11,4 @@ export const useAuth = () => {
   return context;
 };
 
-export default useAuth; 
+export default useAuth;  
