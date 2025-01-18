@@ -155,10 +155,6 @@
 
 // export default Login;
 
-
-
-
-
 // import React, { useState, FormEvent } from "react";
 // import { useNavigate } from "react-router-dom";
 // import  useAuth from "../hooks/useAuth"; // Import the custom hook
@@ -166,7 +162,7 @@
 // const Login: React.FC = () => {
 //   const navigate = useNavigate();
 //   const { setIsAuthenticated, setToken } = useAuth(); // Access authentication functions from context
-  
+
 //   const [email, setEmail] = useState<string>("");
 //   const [password, setPassword] = useState<string>("");
 //   const [error, setError] = useState<string>("");
@@ -184,7 +180,7 @@
 //   // Handle form submission
 //   const handleSubmit = async (e: FormEvent) => {
 //     e.preventDefault();
-    
+
 //     if (!validate()) return;
 
 //     const jsonUser = JSON.stringify({ email, password });
@@ -227,7 +223,7 @@
 //             onChange={(e) => setEmail(e.target.value)}
 //           />
 //         </div>
-        
+
 //         <div className="form-section">
 //           <label htmlFor="password">Password</label>
 //           <input
@@ -248,19 +244,19 @@
 
 // export default Login;
 
-
-import React from 'react';
-import { useAuth } from '../contexts/AuthenticateProvider';  // Adjust the import based on your file structure
+import React from "react";
+import useAuth from "../hooks/useAuth";
+// import { useAuth } from '../contexts/AuthenticateProvider';  // Adjust the import based on your file structure
 
 const Login = () => {
   const { isAuthenticated, login, logout } = useAuth();
 
   const handleLogin = () => {
-    login();  // Call the login function to set isAuthenticated to true
+    login(); // Call the login function to set isAuthenticated to true
   };
 
   const handleLogout = () => {
-    logout();  // Call the logout function to set isAuthenticated to false
+    logout(); // Call the logout function to set isAuthenticated to false
   };
 
   return (
@@ -281,4 +277,3 @@ const Login = () => {
 };
 
 export default Login;
-
