@@ -178,6 +178,7 @@
 import React, { useState, ReactNode } from 'react';
 import { AuthContext, AuthContextType } from '../contexts/AuthContext';  // Import the context
 
+
 // Provider component that wraps the app and provides authentication state
 export const AuthenticateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -207,4 +208,4 @@ export const AuthenticateProvider: React.FC<{ children: ReactNode }> = ({ childr
   );
 };
 
-//export default AuthenticateProvider;
+export default AuthenticateProvider;

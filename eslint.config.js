@@ -1,3 +1,5 @@
+
+
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -26,3 +28,34 @@ export default tseslint.config(
     },
   },
 )
+
+
+
+// export default {
+//   overrides: [
+//     {
+//       files: ['**/*.{ts,tsx}'],
+//       languageOptions: {
+//         ecmaVersion: 2020,
+//         globals: globals.browser,
+//       },
+//       extends: [
+//         js.configs.recommended,
+//         'plugin:react/recommended',
+//         'plugin:@typescript-eslint/recommended',
+//         'plugin:react-hooks/recommended',
+//       ],
+//       plugins: ['react', 'react-hooks', 'react-refresh'],
+//       rules: {
+//         'react/prop-types': 'off',
+//         '@typescript-eslint/explicit-module-boundary-types': 'off',
+//         'react-hooks/rules-of-hooks': 'error',
+//         'react-hooks/exhaustive-deps': 'warn',
+//         'react-refresh/only-export-components': [
+//           'warn',
+//           { allowConstantExport: true },
+//         ],
+//       },
+//     },
+//   ],
+// }

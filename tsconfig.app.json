@@ -21,6 +21,7 @@
     "incremental": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
 
     /* Linting */

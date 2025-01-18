@@ -1,64 +1,79 @@
-
-
-
-
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchProductDetails } from '../services/api'; // Assuming you have this function
+import { fetchProductDetails } from '../services/api';  // Make sure to use the correct API
+import { useCart }  from '../hooks/useCart';
+import CartModal from '../components/CartModal';
+import Navbar from "../layout/Navbar";
+import Header from "../layout/Header";
+import Footer from "../layout/Footer";
+//import CartContext from "../contexts/CartContext";
+import { Product } from "../services/api";
 
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
+interface DetailPageProps {
+  onAddToCart: () => void;
 }
 
-const DetailPage: React.FC = () => {
-  const { id } = useParams(); // Fetch the product ID from the URL params
-  const [product, setProduct] = useState<Product | null>(null); // State to store product details
-  const [loading, setLoading] = useState<boolean>(true); // State to track loading status
-  const [error, setError] = useState<string | null>(null); // State to track error
+const DetailPage: React.FC<DetailPageProps> = ({ onAddToCart }) => {
+  const { id } = useParams<{ id: string }>();
+  const { addProductToCart } = useCart();
+  const [product, setProduct] = useState<Product | null>(null);  // Using any or Product if the type is defined
+  //const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  // Fetch product details from API
   useEffect(() => {
-    const getProductDetail = async () => {
-      if (!id) {
-        setError("Product ID is missing.");
-        setLoading(false);
-        return;
-      }
+    if (id) {
+      const fetchDetails = async () => {
+        try {
+          const data = await fetchProductDetails(id);
+          setProduct(data); // Assuming `fetchProductDetails` returns the full product data
+        } catch (error) {
+          console.error('Error fetching product details:', error);
+          setProduct(null);
+        }
+      };
+      fetchDetails();
+    }
+  }, [id]);
 
-      try {
-        const data = await fetchProductDetails(id); // Fetch product details using the API
-        setProduct(data); // Set the product details in state
-        setLoading(false); // Set loading to false once the data is fetched
-      } catch (error) {
-        setError("Failed to fetch product details.");
-        setLoading(false);
-      }
-    };
+  // Handler to add product to cart and open the modal
+  const handleAddToCart = () => {
+    if (product) {
+      addProductToCart(product);  // Directly add the entire product object
+      onAddToCart(); // Open the modal when product is added
+    }
+  };
+  
 
-    getProductDetail(); // Call the function to fetch product details
-  }, [id]); // Effect depends on the product ID
-
-  if (loading) {
-    return <div className="text-center text-lg">Loading product details...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center text-lg text-red-500">{error}</div>;
-  }
-
-  if (!product) {
-    return <div className="text-center text-lg">Product not found</div>;
-  }
+  if (!product) return <div>Loading...</div>;  // Handle loading state
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-6">{product.title}</h1>
-      <img src={product.image} alt={product.title} className="w-full h-60 object-cover mb-4" />
-      <p className="text-xl mb-4">{product.description}</p>
-      <p className="text-2xl font-semibold">${product.price.toFixed(2)}</p>
+    <div className="container mx-auto p-6">
+      <Navbar />
+      <Header />
+      <h2 className="text-4xl font-bold mb-6">{product.title}</h2>
+      <img 
+      src={product.imageUrl} 
+      alt={product.title} 
+      className="mb-4 w-full max-w-sm mx-auto" />
+      <p className="text-lg mb-4">{product.description}</p>
+      <p className="text-xl font-semibold mb-4">${product.price}</p>
+
+      <button
+        onClick={handleAddToCart}
+        className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600"
+      >
+        Add to Cart
+      </button>
+
+      {/* Cart Modal
+      <CartModal 
+      isOpen={isModalOpen} 
+      onClose={() => setIsModalOpen(false)} 
+      onAddToCart={handleAddToCart}
+      /> */}
+    
+    
+    <Footer />
     </div>
   );
 };

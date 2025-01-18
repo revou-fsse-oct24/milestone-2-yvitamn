@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, logout } = useAuth(); // Get authentication state and logout function
