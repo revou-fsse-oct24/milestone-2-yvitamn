@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth(); // Get authentication state and logout function
+  const { isAuthenticated, user, logout } = useAuth(); // Access user and authentication state
   const location = useLocation(); // To track the current route
 
   const handleLogout = () => {
@@ -43,6 +42,7 @@ const Navbar: React.FC = () => {
               >
                 Checkout
               </Link>
+              <span className="text-gray-300">Welcome, {user?.name}!</span> {/* Display user name */}
               <button
                 onClick={handleLogout}
                 className="hover:text-gray-300"

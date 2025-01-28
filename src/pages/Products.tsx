@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { fetchProducts } from '../services/api';
-import Navbar from "../layout/Navbar";
 import Header from "../layout/Header";
-import Footer from "../layout/Footer";
 import { Product } from "../services/api";
 import { useCart } from '../hooks/useCart';  
 import { useAuth } from '../hooks/useAuth';  
@@ -56,7 +54,7 @@ const Products: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <Navbar />
+      
 
       {/* Conditionally render Header based on modal state */}
       {isModalOpen && <Header />}
@@ -112,8 +110,6 @@ const Products: React.FC = () => {
             </div>
           )}
 
-
-      <Footer /> {/* Footer */}
     </div>
   );
 };

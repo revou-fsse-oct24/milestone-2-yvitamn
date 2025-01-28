@@ -2,6 +2,8 @@
 // Base URL for the API
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
+
+
 // Interface for Product type
 export interface Product {
   id: string | number;
@@ -28,8 +30,9 @@ export const fetchProducts = async (): Promise<Product[]> => {
       title: string;
       description: string;
       price: number;
+      images: string[]; 
       category: { id: string | number; name: string; image: string };
-      images: string[]; // Array of image URLs
+      
     }[] = await response.json(); // Inline the type
 
 

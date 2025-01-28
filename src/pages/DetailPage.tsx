@@ -2,11 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchProductDetails } from '../services/api';  // Make sure to use the correct API
 import { useCart }  from '../hooks/useCart';
-import CartModal from '../components/CartModal';
-import Navbar from "../layout/Navbar";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
-//import CartContext from "../contexts/CartContext";
 import { Product } from "../services/api";
 
 interface DetailPageProps {
@@ -48,8 +43,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ onAddToCart }) => {
 
   return (
     <div className="container mx-auto p-6">
-      <Navbar />
-      <Header />
+      
       <h2 className="text-4xl font-bold mb-6">{product.title}</h2>
       <img 
       src={product.imageUrl} 
@@ -73,7 +67,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ onAddToCart }) => {
       /> */}
     
     
-    <Footer />
+    
     </div>
   );
 };

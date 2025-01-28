@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Login from '../pages/Login'; 
+import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Products from '../pages/Products';
 import DetailPage from '../pages/DetailPage';
@@ -8,20 +8,18 @@ import NotFound from '../pages/NotFound';
 import PrivateRoute from '../pages/PrivateRoute';
 import Navbar from "../layout/Navbar";
 import Header from "../layout/Header";
-import Footer from "../layout/Footer";
-import { useAuth } from "../hooks/useAuth";
-import  CartModal  from '../components/CartModal';
-
+import WelcomeModal from "../components/WelcomeModal";
+import CartModal from '../components/CartModal';
+import Checkout from '../pages/Checkout'; // Import CheckoutPage
+import { useCart } from '../hooks/useCart'; // Use the correct hook to access cart items
 
 const AppRoutes: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { addedProducts: cartItems } = useCart(); // Access cart items through the custom hook useCart
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-  
+  const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(true);
+
   const handleOpenCartModal = () => {
     setIsCartModalOpen(true);
-    setTimeout(() => {
-      setIsCartModalOpen(false);
-    }, 10000);
   };
 
   const handleCloseCartModal = () => {
@@ -29,46 +27,46 @@ const AppRoutes: React.FC = () => {
   };
 
   return (
-    <div>
-      <Navbar />
+   
+   <div>
       <Header />
-      <Footer />
+      <Navbar />
 
-      {/* Conditional Rendering Based on Auth Status */}
-      {!isAuthenticated ? (
-        <Login />
-      ) : (
-        <>
-          <Routes>
-            {/* Products and Cart Modal open functionality */}
-            <Route path="/" element={<Products />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/:id" element={<DetailPage onAddToCart={handleOpenCartModal} />} />
+      {/* Welcome Modal */}
+      {isWelcomeModalOpen && <WelcomeModal onClose={() => setIsWelcomeModalOpen(false)} />}
 
-            {/* Protected Route for Checkout */}
-            <Route element={<PrivateRoute />}>
-              <Route path="/checkout" element={<CartModal 
-              isOpen={isCartModalOpen} 
-              onClose={handleCloseCartModal}
-              onAddToCart={handleOpenCartModal} 
-              />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Products />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/:id" element={<DetailPage onAddToCart={handleOpenCartModal} />} />
 
-          {/* Conditionally display Cart Modal */}
-          <CartModal 
-          isOpen={isCartModalOpen} 
-          onClose={handleCloseCartModal} 
+        {/* Protected Route for Checkout */}
+        <Route 
+          path="/checkout" 
+          element={
+            <PrivateRoute element={<Checkout />} />
+          } 
+        />
+
+        {/* Catch-all for 404 Not Found */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      {/* Conditionally display the Cart Modal */}
+      {isCartModalOpen && (
+        <CartModal
+          isOpen={isCartModalOpen}
+          onClose={handleCloseCartModal}
+          cartItems={cartItems} // Pass cart items to CartModal
           onAddToCart={handleOpenCartModal}
-          />
-        </>
+        />
       )}
     </div>
+
   );
 };
-
 
 export default AppRoutes;

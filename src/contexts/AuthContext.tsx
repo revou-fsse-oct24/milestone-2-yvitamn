@@ -13,3 +13,8 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 
 //export default AuthContext;
+
+// // AuthProvider component
+// interface AuthProviderProps {
+//   children: ReactNode;
+// }

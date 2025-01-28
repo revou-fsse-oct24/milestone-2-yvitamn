@@ -12,7 +12,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Add product to cart
   const addProductToCart = (product: Product) => {
-    setAddedProducts((prevProduct) => { // Renamed prevState to prevProduct
+    setAddedProducts((prevProduct) => { 
       const existingProduct = prevProduct.find((item) => item.id === product.id);
       if (existingProduct) {
         return prevProduct.map((item) =>

@@ -9,7 +9,25 @@ export const useCart = () => {
     throw new Error('useCart must be used within a CartProvider');
   }
 
-  return context;
+  const {
+    addedProducts,
+    checkout,
+    addProductToCart,
+    removeProductFromCart,
+    updateProductQuantity,
+    onCompleteCheckout,
+    setCheckout,
+  } = context;
+
+  return {
+    addedProducts,
+    checkout,
+    addProductToCart,
+    removeProductFromCart,
+    updateProductQuantity,
+    onCompleteCheckout,
+    setCheckout,
+  };
 };
 
 export default useCart;

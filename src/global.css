@@ -25,3 +25,32 @@
     border-color: #9b4d96;
   }
 }
+
+
+
+
+/* Initial visible state of the modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1s ease-out, visibility 0s 1s; /* Adds fade-out animation */
+}
+
+/* Fade-out state */
+.modal.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease-out, visibility 0s 1s; /* Keeps visibility hidden after fade */
+}
+
+.modal-content {
+  text-align: center;
+}

@@ -1,42 +1,59 @@
-//import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useCart } from '../hooks/useCart';
 import { CartSummary } from '../components/CartSummary';
-
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { useCartActions } from '../hooks/useCartActions';
+import { Product } from '../services/api';
 
 interface CartModalProps {
   isOpen: boolean;
   onClose: () => void;
+  cartItems: Product[];
   onAddToCart: () => void; 
 }
 
 const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, onAddToCart }) => {
+  const { isAuthenticated } = useAuth();  // Get auth status
   const { 
       addedProducts,
       removeProductFromCart, 
-      onCompleteCheckout, 
-      updateProductQuantity,
       setCheckout 
+
     } = useCart();
+  const { handleQuantityChange } = useCartActions();
+  const navigate = useNavigate(); 
+  const modalRef = useRef<HTMLDivElement>(null);
   
-const handleCompleteCheckout = () => {
-  setCheckout(true); // Set checkout status to true
-  onCompleteCheckout(); // Call the parent function for checkout
-};
+  
+  // Close the modal when clicking outside of it
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+    // Add event listener for outside clicks
+    document.addEventListener('mousedown', handleOutsideClick);
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [onClose]);
 
-const handleQuantityChange = (productId: string, increment: boolean) => {
-  // Use cartItems instead of addedProducts
-  const product = addedProducts.find(item => item.id === productId);  // Use addedProducts (or cartItems)
-  if (product) {
-    const newQuantity = increment
-      ? product.quantity + 1 // If increment is true, increase quantity
-      : Math.max(product.quantity - 1, 1); // If increment is false, decrease quantity but not below 1
 
-    // Call updateProductQuantity with the correct value (increment flag tells if quantity should go up or down)
-    updateProductQuantity(productId, newQuantity);  // Pass the increment flag as a boolean
-  } else {
-    console.log("Product not found.");
-  }
-};
+  const handleCompleteCheckout = () => {
+      if (!isAuthenticated) {
+        // If user is not authenticated, redirect to login page
+        navigate('/login');
+        return;
+      }
+      setCheckout(true); // Set checkout status to true
+     
+      navigate('/checkout'); // Redirect to checkout page
+      onAddToCart();
+    };
+
 
 
       if (!isOpen) return null; // If modal isn't open, don't render
@@ -54,13 +71,11 @@ const handleQuantityChange = (productId: string, increment: boolean) => {
         <h2 className="text-2xl font-bold mb-4 text-center">Your Cart</h2>
 
         {/* Pass props to CartSummary for cart-related logic */}
-        <CartSummary 
+        <CartSummary       
         cartItems={addedProducts}          // Cart items (products)
-        onRemoveProduct={removeProductFromCart}   // Function to remove product
-        onCompleteCheckout={handleCompleteCheckout}     // Function to complete checkout
-        onClose={onClose}                    // Close modal
-        updateProductQuantity={handleQuantityChange} // Function to update quantity
-        onAddToCart={onAddToCart}
+        removeProductFromCart={removeProductFromCart}   // Function to remove product
+        onCompleteCheckout={handleCompleteCheckout}     // Function to complete checkout                     
+        updateProductQuantity={handleQuantityChange}  // Function to update quantity   
         />
       </div>
     </div>

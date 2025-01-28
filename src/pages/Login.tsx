@@ -1,8 +1,5 @@
-
-
-import  { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth'; // Import the custom hook
-//import { useAuth } from '../contexts/AuthenticateProvider';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
@@ -26,40 +23,61 @@ const Login: React.FC = () => {
     if (isAuthenticated) {
       navigate('/products');
     }
-  }, [isAuthenticated, navigate]); // This effect will run when isAuthenticated changes
+  }, [isAuthenticated, navigate]);
 
   return (
-    <div>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
       {isAuthenticated ? (
-        <div>
-          <h1>You're logged in!</h1>
-          <button onClick={logout}>Logout</button>
+        <div className="bg-white p-6 rounded shadow-md text-center">
+          <h1 className="text-2xl font-semibold">You're logged in!</h1>
+          <button
+            onClick={logout}
+            className="mt-4 bg-red-500 text-white py-2 px-6 rounded-md hover:bg-red-600"
+          >
+            Logout
+          </button>
         </div>
       ) : (
-        <div>
-          <h1>Please login</h1>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div className="bg-white p-6 rounded shadow-md w-80">
+          <h1 className="text-2xl font-semibold mb-4 text-center">Please Login</h1>
+          {error && <p className="text-red-600 text-center mb-4">{error}</p>}
           <form onSubmit={handleSubmit}>
-            <div>
-              <label>Email</label>
+            <div className="mb-4">
+              <label className="block text-sm font-semibold mb-2">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="w-full p-2 border border-gray-300 rounded-md"
               />
             </div>
-            <div>
-              <label>Password</label>
+            <div className="mb-4">
+              <label className="block text-sm font-semibold mb-2">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="w-full p-2 border border-gray-300 rounded-md"
               />
             </div>
-            <button type="submit">Login</button>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+            >
+              Login
+            </button>
           </form>
+          <p className="mt-4 text-center">
+            Don't have an account?{' '}
+            <span
+              onClick={() => navigate('/signup')}
+              className="text-blue-500 cursor-pointer"
+            >
+              Sign Up
+            </span>
+          </p>
         </div>
       )}
     </div>
