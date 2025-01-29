@@ -1,6 +1,6 @@
-
-import Link from 'next/link';
-//import { useAuth } from '../hooks/useAuth';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth(); // Access user and authentication state

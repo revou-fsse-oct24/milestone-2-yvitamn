@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { fetchProductDetails } from '../../services/api'; 
@@ -10,11 +10,35 @@ interface DetailPageProps {
   product: Product; // Data fetched on the server
 }
 
-const DetailPage: React.FC<DetailPageProps> = ({ product }) => {
+const ProductDetailPage = () => {
   const router = useRouter();
+  //const [productss, setProductss] = useState<Product | null>(null);
+ // const [isLoading, setIsLoading] = useState(true);
   const { addProductToCart } = useCart();
   const { setIsCartModalOpen } = useModal(); 
   const [error, setError] = useState<string | null>(null);
+  const { query } = useRouter();
+  const { id } = query;
+
+
+  // useEffect(() => {
+  //   if (!id) return;  // Ensure the ID exists in the query
+
+  //   const getProductDetails = async () => {
+  //     try {
+  //       const data = await fetchProductDetails(id as string);  // Call the API function
+  //       setProductss(data);
+  //     } catch (error) {
+  //       setError('Failed to load product details');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   getProductDetails();
+  // }, [id]);
+
+
 
   // Handler to add product to cart and open the modal
   const handleAddToCart = () => {
@@ -82,7 +106,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ product }) => {
   );
 };
 
-export default DetailPage;
+export default ProductDetailPage;
 
 // Fetch product details on the server side
 export const getServerSideProps: GetServerSideProps = async (context) => {

@@ -3,17 +3,17 @@ import type { AppProps } from 'next/app';
 import { AuthenticateProvider } from '../contexts/AuthenticateProvider';
 import { CartProvider } from '../contexts/CartProvider';
 import Layout from '../components/Layout';
-import { ModalContext } from '../contexts/ModalContext';
+import { ModalProvider } from '../contexts/ModalContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthenticateProvider>
       <CartProvider>
-      <ModalContext.Provider value={{ isCartModalOpen, setIsCartModalOpen }}>
+      <ModalProvider>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-      </ModalContext.Provider>
+      </ModalProvider>
       </CartProvider>
     </AuthenticateProvider>
   );
