@@ -1,7 +1,7 @@
 
 
 import { GetServerSideProps } from 'next';
-import { fetchProducts, Product } from '../services/api';
+import { fetchProducts, Product } from '../api/api';
 
 interface ProductsProps {
   products: Product[];
