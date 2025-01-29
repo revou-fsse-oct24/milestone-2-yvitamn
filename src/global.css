@@ -27,7 +27,16 @@
 }
 
 
+.transition-opacity {
+  transition: opacity 0.3s ease-out;
+}
+header {
+  background-color: transparent !important; /* Ensure transparency */
+}
 
+img {
+  mix-blend-mode: multiply; /* Optional: Adjust blending for better visibility */
+}
 
 /* Initial visible state of the modal */
 .modal {

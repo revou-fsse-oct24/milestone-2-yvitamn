@@ -7,7 +7,7 @@ import DetailPage from '../pages/DetailPage';
 import NotFound from '../pages/NotFound';
 import PrivateRoute from '../pages/PrivateRoute';
 import Navbar from "../layout/Navbar";
-import Header from "../layout/Header";
+import HomePage from "../pages/HomePage";
 import WelcomeModal from "../components/WelcomeModal";
 import CartModal from '../components/CartModal';
 import Checkout from '../pages/Checkout'; // Import CheckoutPage
@@ -29,7 +29,7 @@ const AppRoutes: React.FC = () => {
   return (
    
    <div>
-      <Header />
+      {/* <Header /> */}
       <Navbar />
 
       {/* Welcome Modal */}
@@ -37,7 +37,8 @@ const AppRoutes: React.FC = () => {
 
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Products />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products" element={<Products />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/products" element={<Products />} />

@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Product } from '../services/api';
-import { useCartActions } from '../hooks/useCartActions'
+//import { useCartActions } from '../hooks/useCartActions'
 
 
 interface CartSummaryProps {
   cartItems: Product[];
   removeProductFromCart: (productId: string) => void;  // The onRemoveProduct prop is a function that accepts productId as a string
   onCompleteCheckout: () => void;            // The onCompleteCheckout prop is a function with no arguments
-  //handleQuantityChange: (productId: string, increment: boolean) => void;
+  updateProductQuantity: (productId: string | number, increment: boolean) => void;
   
 }
 
@@ -15,11 +15,11 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
   cartItems,
   removeProductFromCart,
   onCompleteCheckout,
- // handleQuantityChange,
+  updateProductQuantity,
   
 }) => {
   // State for total price
-  const { handleQuantityChange } = useCartActions();
+ // const { handleQuantityChange } = useCartActions();
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
  // Memoized function to calculate total price
@@ -68,7 +68,7 @@ useEffect(() => {
                   <div className="flex items-center space-x-2">
                     {/* Decrement Button */}
                     <button
-                      onClick={() => handleQuantityChange(item.id, false)}
+                      onClick={() => updateProductQuantity(item.id, false)}
                       className="px-2 py-1 bg-gray-300 rounded-full text-lg"
                       disabled={item.quantity <= 1} // Disable decrement when quantity is 1
                     >
@@ -80,7 +80,7 @@ useEffect(() => {
 
                     {/* Increment Button */}
                     <button
-                      onClick={() => handleQuantityChange(item.id, true)}
+                      onClick={() => updateProductQuantity(item.id, true)}
                       className="px-2 py-1 bg-gray-300 rounded-full text-lg"
                     >
                       +

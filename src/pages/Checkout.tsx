@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import ThankYouModal from '../components/ThankYouModal';
 
+
+
 const Checkout: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const { addedProducts } = useCart(); // Get the cart items
@@ -15,7 +17,8 @@ const Checkout: React.FC = () => {
   // Calculate total price
   const calculateTotalPrice = () => {
     return addedProducts.reduce((total, product) => total + product.price * product.quantity, 0);
-  };
+ 
+};
 
   // If the user is not authenticated, redirect to login
   useEffect(() => {
@@ -29,6 +32,8 @@ const Checkout: React.FC = () => {
       if (!paymentMethod) {
         setError('Please select a payment method.');
         return;
+    } else {
+        setError(null); 
       }
 
       const checkoutSuccess = true; // Simulated checkout status
@@ -74,7 +79,8 @@ const Checkout: React.FC = () => {
                   </li>
                 ))}
               </ul>
-
+            
+              
               <div className="mb-4 font-semibold">
                 Total: ${calculateTotalPrice().toFixed(2)}
               </div>
@@ -95,6 +101,8 @@ const Checkout: React.FC = () => {
 
               {error && <p className="text-red-500 mb-4">{error}</p>}
 
+
+              <div className="flex justify-center">
               <button
                 onClick={handleCheckout}
                 className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-600 w-full mb-4"
@@ -109,6 +117,7 @@ const Checkout: React.FC = () => {
               >
                 Continue Shopping
               </button>
+              </div>
             </div>
           )}
         </div>
