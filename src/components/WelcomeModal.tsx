@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '/src/global.css'; 
+import '@/styles/global.css'; 
 
 interface WelcomeModalProps {
   onClose: () => void; 
