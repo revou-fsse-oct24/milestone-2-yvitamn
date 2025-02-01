@@ -6,7 +6,7 @@ import { Product } from "../services/api";
 import { useAuth } from '../hooks/useAuth';    
 
 
-const Products: React.FC = () => {
+const HomePage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]); // Products state
   const [isLoading, setIsLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
@@ -139,4 +139,4 @@ const Products: React.FC = () => {
   );
 };
 
-export default Products;
+export default HomePage;
