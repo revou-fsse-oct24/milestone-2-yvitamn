@@ -40,7 +40,7 @@ const Products: React.FC = () => {
   return (
     <div className="container mx-auto p-6">
   
-      {<Header />}
+      {/* {<Header />} */}
 
       {/* Display a welcome message if the user is logged in */}
       {user && (

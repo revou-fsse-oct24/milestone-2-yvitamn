@@ -41,7 +41,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/products" element={<Products />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/products" element={<Products />} />
+        {/* <Route path="/products" element={<Products />} /> */}
         <Route path="/products/:id" element={<DetailPage onAddToCart={handleOpenCartModal} />} />
 
         {/* Protected Route for Checkout */}

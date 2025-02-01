@@ -1,11 +1,11 @@
 
-//import React from 'react';
 import { Navigate, RouteProps } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth'; //Custom hook to get auth status
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth'; 
+
 
 const PrivateRoute: React.FC<RouteProps> = ({ element }) => {
   const { isAuthenticated } = useAuth(); // Get auth status from context
+  
 
   // If not authenticated, redirect to login page
   if (!isAuthenticated) {

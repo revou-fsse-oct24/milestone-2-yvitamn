@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchProducts } from '../services/api';
-import Header from "../layout/Header";
 import { Product } from "../services/api";  
 import { useAuth } from '../hooks/useAuth';    
 
@@ -39,19 +38,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
-  
-      {!isModalOpen && <Header />}
-
-      {/* Display a welcome message if the user is logged in */}
-      {user && (
-        <div className="text-center mb-6">
-          <p className="text-lg">Welcome back, {user.name}!</p>
-        </div>
-      )}
-
-
-      {/* Main Content */}
-      {/* <h1 className="text-4xl font-bold mb-8 text-center">Our Products</h1> */}
 
       {isLoading ? (
   <div className="text-center">Loading...</div>
@@ -120,7 +106,7 @@ const HomePage: React.FC = () => {
 
 
       {/* Welcome Modal */}
-      {/* {isModalOpen && (
+      {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 text-center" role="dialog" aria-labelledby="modal-title">
             <h2 id="modal-title" className="text-2xl font-bold">Welcome to Shop Smart!</h2>
@@ -134,7 +120,7 @@ const HomePage: React.FC = () => {
             </button>
               </div>
             </div>
-          )} */}
+          )}
     </div>   
   );
 };
