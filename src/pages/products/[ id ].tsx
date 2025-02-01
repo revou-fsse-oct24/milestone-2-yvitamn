@@ -1,44 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
-import { fetchProductDetails } from '../../services/api'; 
-import { Product } from '../../services/api'; 
-import { useCart } from '../../hooks/useCart'; 
-import { useModal } from '../../contexts/ModalContext'; 
+import { fetchProductDetails } from '@/lib/productApi'; 
+import { Product } from '@/lib/types'; 
+import { useCart } from '@/hooks/useCart'; 
+import { useModal } from '@/lib/contexts/ModalContext'; 
+
 
 interface DetailPageProps {
   product: Product; // Data fetched on the server
 }
 
-const ProductDetailPage = () => {
+const ProductDetailPage = ({ product }: DetailPageProps) => {
   const router = useRouter();
-  //const [productss, setProductss] = useState<Product | null>(null);
- // const [isLoading, setIsLoading] = useState(true);
   const { addProductToCart } = useCart();
   const { setIsCartModalOpen } = useModal(); 
   const [error, setError] = useState<string | null>(null);
-  const { query } = useRouter();
-  const { id } = query;
-
-
-  // useEffect(() => {
-  //   if (!id) return;  // Ensure the ID exists in the query
-
-  //   const getProductDetails = async () => {
-  //     try {
-  //       const data = await fetchProductDetails(id as string);  // Call the API function
-  //       setProductss(data);
-  //     } catch (error) {
-  //       setError('Failed to load product details');
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   getProductDetails();
-  // }, [id]);
-
-
+  
 
   // Handler to add product to cart and open the modal
   const handleAddToCart = () => {
@@ -108,12 +86,19 @@ const ProductDetailPage = () => {
 
 export default ProductDetailPage;
 
-// Fetch product details on the server side
-export const getServerSideProps: GetServerSideProps = async (context) => {
+// Fetch product details on the server side using getServerSideProps
+export const getServerSideProps: GetServerSideProps<DetailPageProps> = async (context) => {
   const { id } = context.params as { id: string };
 
   try {
-    const product = await fetchProductDetails(id);
+    const product = await fetchProductDetails(id); // Fetch product details from the API
+
+    if (!product) {
+      return {
+        notFound: true, // Show a 404 page if the product is not found
+      };
+    }
+
     return {
       props: {
         product,
@@ -122,10 +107,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (error) {
     console.error('Failed to fetch product details:', error);
     return {
-      props: {
-        product: null,
-        error: 'Failed to load product details. Please try again later.',
-      },
+      notFound: true, // Show a 404 page if there's an error
     };
   }
 };

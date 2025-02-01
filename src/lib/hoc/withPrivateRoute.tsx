@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
-const withPrivateRoute = (Component: any) => {
-  return (props: any) => {
+const withPrivateRoute = <P extends object>(Component: React.ComponentType<P>) => {
+  return (props: P) => {
     const router = useRouter();
-    const isAuthenticated = // Your authentication check logic, e.g., check if the user is logged in
+    const isAuthenticated = useAuth();// Your authentication check logic, e.g., check if the user is logged in
 
     useEffect(() => {
       if (!isAuthenticated) {

@@ -1,19 +1,24 @@
 
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../hooks/useCart'; // Custom hook to manage cart
-//import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import ThankYouModal from '../components/ThankYouModal';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import withPrivateRoute from '../lib/hoc/withPrivateRoute';
+import { getOrders, updateOrderStatus } from '@/lib/orderApi';
+import { Order, OrderItem } from '@/lib/types';
 
 
 const Checkout: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  const { addedProducts } = useCart(); // Get the cart items
+  const { addedProducts, clearCart } = useCart(); // Get the cart items
   const [paymentMethod, setPaymentMethod] = useState<string>(''); // State for selected payment method
   const [error, setError] = useState<string | null>(null);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false); // Track order success
-  const navigate = useNavigate(); // To navigate after checkout
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();// To navigate after checkout
+    
 
   // Calculate total price
   const calculateTotalPrice = () => {
@@ -24,39 +29,60 @@ const Checkout: React.FC = () => {
   // If the user is not authenticated, redirect to login
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login');  // Redirect to login if not authenticated
+      router.push('/login'); // Redirect to login if not authenticated
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, router]);
 
   const handleCheckout = async () => {
     try {
       if (!paymentMethod) {
         setError('Please select a payment method.');
         return;
-    } else {
-        setError(null); 
       }
 
-      const checkoutSuccess = true; // Simulated checkout status
+      setIsLoading(true);
+      setError(null);
 
-      if (!checkoutSuccess) {
-        throw new Error('Checkout failed, please try again later.');
-      }
+      // Transform addedProducts (Product[]) into items (OrderItem[])
+      const items: OrderItem[] = addedProducts.map((product) => ({
+        id: product.id, // Map product.id to productId
+        product: product,
+        quantity: product.quantity,
+        price: product.price, // Include price if needed
+      }));
+  
+      // Create the order
+      const order: Order = {
+        id: Math.floor(Math.random() * 1000), // Generate a random order ID
+        userId: 1, // Replace with the actual user ID
+        items, // Use the transformed items
+        total: calculateTotalPrice(),
+        status: 'pending',
+      };
+  
+
+      // Update order status (replace with actual API call)
+      await updateOrderStatus(order.id, 'completed');
+
+      // Clear the cart after successful checkout
+      clearCart();
 
       setOrderSuccess(true);
-      setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong, please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
+
   const handleContinueShopping = () => {
-    navigate('/products'); // Navigate to the products page (or any other page you want)
+    router.push('/products'); // Navigate to the products page (or any other page you want)
   };
 
   const handleCloseModal = () => {
     setOrderSuccess(false); // Hide modal after closing
-    navigate('/'); // Redirect to home or any other page
+    router.push('/'); // Redirect to home or any other page
   };
 
   return (
@@ -94,9 +120,9 @@ const Checkout: React.FC = () => {
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 >
                   <option value="">Select Payment Method</option>
-                  <option value="credit-card">Credit Card</option>
+                  <option value="shopeepay">Shopeepay</option>
                   <option value="paypal">PayPal</option>
-                  <option value="tf-bank">Transfer Bank</option>
+                  <option value="gpay">GPay</option>
                 </select>
               </div>
 
@@ -107,17 +133,17 @@ const Checkout: React.FC = () => {
               <button
                 onClick={handleCheckout}
                 className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-600 w-full mb-4"
-                disabled={!paymentMethod}
-              >
-                Proceed to Checkout
-              </button>
+                disabled={!paymentMethod || isLoading}
+                >
+                  {isLoading ? 'Processing...' : 'Proceed to Checkout'}
+                </button>
 
-              <button
-                onClick={handleContinueShopping}
-                className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 w-full"
-              >
-                Continue Shopping
-              </button>
+                <button
+                  onClick={handleContinueShopping}
+                  className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 w-full"
+                >
+                  Continue Shopping
+                </button>
               </div>
             </div>
           )}
@@ -128,24 +154,21 @@ const Checkout: React.FC = () => {
 };
 
 //export default Checkout;
-export default withPrivateRoute(CheckoutPage);
+export default withPrivateRoute(Checkout);
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const user = await getUserSession(context.req); // Get user session data from cookies or session storage
-    if (!user) {
-      return {
-        redirect: {
-          destination: '/login',
-          permanent: false,
-        },
-      };
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+    const token = req.cookies.token;  // Get the token from cookies
+    if (!token) {
+      return { redirect: { destination: '/login', permanent: false } };
     }
   
-    const cartItems = await getUserCart(user.id); // Fetch user's cart data
-    return {
-      props: {
-        cartItems,
-        user,
-      },
-    };
+    try {
+      const orders = await getOrders();  // Fetch the user's cart items from the server
+      return { props: { orders } };
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+      return { notFound: true };
+    }
   };
+

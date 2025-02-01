@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
-import { CartContext } from './CartContext'; // Import CartContext and Product type
-import { Product } from '../services/api';
+import { Product } from '@/lib/types';
+import { CartContext } from './CartContext';
 
 interface CartProviderProps {
   children: ReactNode;
@@ -12,34 +12,23 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Add product to cart
   const addProductToCart = (product: Product) => {
-    setAddedProducts((prevProduct) => { 
-      const existingProduct = prevProduct.find((item) => item.id === product.id);
+    setAddedProducts((prevProducts) => {
+      const existingProduct = prevProducts.find((p) => p.id === product.id);
       if (existingProduct) {
-        return prevProduct.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        return prevProducts.map((p) =>
+          p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
         );
       }
-      return [...prevProduct, { ...product, quantity: 1 }];
+      return [...prevProducts, { ...product, quantity: 1 }];
     });
   };
 
-  // Remove product from cart
-  const removeProductFromCart = (productId: string | number) => { // Updated type to accept string | number
-    setAddedProducts((prevProduct) => { // Renamed prevState to prevProduct
-      const existingProduct = prevProduct.find((item) => item.id === productId);
-      if (existingProduct) {
-        if (existingProduct.quantity > 1) {
-          return prevProduct.map((item) =>
-            item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
-          );
-        }
-        return prevProduct.filter((item) => item.id !== productId);
-      }
-      return prevProduct;
-    });
+  const removeProductFromCart = (productId: string | number) => {
+    setAddedProducts((prevProducts) =>
+      prevProducts.filter((product) => product.id !== productId)
+    );
   };
 
-  // Update product quantity  
   const updateProductQuantity = (productId: string | number, quantity: number) => {
     setAddedProducts((prevProducts) =>
       prevProducts.map((product) =>
@@ -47,10 +36,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       )
     );
   };
-  
 
-
-  // Complete checkout function
+  // Clear the cart
+  const clearCart = () => {
+    setAddedProducts([])
+  }
   const onCompleteCheckout = () => {
     setCheckout(true);
   };
@@ -68,9 +58,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       removeProductFromCart, 
       onCompleteCheckout,
       updateProductQuantity,
-      setCheckout: setCheckoutStatus // Using setCheckout here
+      setCheckout: setCheckoutStatus, // Using setCheckout here
+      clearCart
     }}>
       {children}
     </CartContext.Provider>
   );
 };
+

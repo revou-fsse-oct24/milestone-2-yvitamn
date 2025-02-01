@@ -1,15 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Product } from '../services/api';
+import { CartSummaryProps } from '../lib/types';
 //import { useCartActions } from '../hooks/useCartActions'
 
-
-interface CartSummaryProps {
-  cartItems: Product[];
-  removeProductFromCart: (productId: string) => void;  // The onRemoveProduct prop is a function that accepts productId as a string
-  onCompleteCheckout: () => void;            // The onCompleteCheckout prop is a function with no arguments
-  updateProductQuantity: (productId: string | number, increment: boolean) => void;
-  
-}
 
 export const CartSummary: React.FC<CartSummaryProps> = ({
   cartItems,

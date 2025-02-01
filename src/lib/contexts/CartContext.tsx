@@ -1,7 +1,7 @@
 
 
 import { createContext } from 'react';
-import { Product } from '../services/api'; 
+import { Product } from '@/lib/types'; 
 
 
 
@@ -10,7 +10,7 @@ export interface CartContextType {
   checkout: boolean;
   addProductToCart: (product: Product) => void;
   updateProductQuantity: (productId: string | number, quantity: number) => void;
-  removeProductFromCart: (productId: string) => void;
+  removeProductFromCart: (productId: string | number) => void;
   onCompleteCheckout: () => void;
   setCheckout: (checkout: boolean) => void; // Method to update checkout state
 }

@@ -2,27 +2,21 @@ import React, { useRef, useEffect } from 'react';
 import { useCart } from '../hooks/useCart';
 import { CartSummary } from '../components/CartSummary';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import { useCartActions } from '../hooks/useCartActions';
-import { Product } from '../services/api';
+import { CartModalProps } from '../lib/types';
+import { useRouter } from 'next/router';
 
-interface CartModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  cartItems: Product[];
-  onAddToCart: () => void; 
-}
 
-const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, onAddToCart }) => {
+const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
   const { isAuthenticated } = useAuth();  // Get auth status
   const { 
       addedProducts,
       removeProductFromCart, 
-      setCheckout 
+      setCheckout,
+      handleQuantityChange
 
     } = useCart();
-  const { handleQuantityChange } = useCartActions();
-  const navigate = useNavigate(); 
+ 
+  const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
   
   
@@ -41,17 +35,17 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, onAddToCart }) =
     };
   }, [onClose]);
 
+  
 
   const handleCompleteCheckout = () => {
       if (!isAuthenticated) {
         // If user is not authenticated, redirect to login page
-        navigate('/login');
+        router.push('/login');
         return;
       }
-      setCheckout(true); // Set checkout status to true
-     
-      navigate('/checkout'); // Redirect to checkout page
-      onAddToCart();
+      setCheckout(true); // Set checkout status to true    
+      router.push('/checkout'); // Redirect to checkout page
+      
     };
 
 
