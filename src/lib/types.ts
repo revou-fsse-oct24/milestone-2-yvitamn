@@ -6,7 +6,7 @@ export interface Product {
     title: string;
     description: string;
     price: number;
-    imageUrl: string[]; // Single image URL for the frontend
+    imageUrl: string; // Single image URL for the frontend
     category: Category;
     quantity: number;
   }
@@ -29,13 +29,14 @@ export interface Category {
     id: number;
     userId: number; // ID of the user who placed the order
     //date: string; // ISO date string
-    status: string; // e.g., "pending", "shipped", "delivered"
+     // e.g., "pending", "shipped", "delivered"
     items: OrderItem[]; // List of products in the order
     total: number; // Total price of the order
-  }
+    status: string;
+}
 
-    export interface OrderItem{
-    productId : number | string;
+    export interface OrderItem {
+    productId : string | number;
     quantity: number;
     price:number;
     }

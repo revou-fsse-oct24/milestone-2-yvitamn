@@ -7,11 +7,8 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
   cartItems,
   removeProductFromCart,
   onCompleteCheckout,
-  updateProductQuantity,
-  
+  updateProductQuantity, 
 }) => {
-  // State for total price
- // const { handleQuantityChange } = useCartActions();
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
  // Memoized function to calculate total price
@@ -43,6 +40,7 @@ useEffect(() => {
     {/* If no items in the cart, show an empty message */}
     {cartItems.length === 0 ? (
       <p>Your cart is empty!</p>
+
     ) : (
       <ul className="space-y-4">
         {cartItems.map((item) => (
